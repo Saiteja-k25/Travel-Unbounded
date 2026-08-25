@@ -28,12 +28,9 @@ export default function Hero() {
       <div className="absolute inset-0 bg-clay-900/10 mix-blend-multiply" />
 
       <Container className="relative pb-16 pt-40 sm:pb-24 sm:pt-48">
-        <div className="flex items-center gap-4">
-          <span className="h-px w-10 bg-clay-300" aria-hidden="true" />
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-clay-300">
-            Experiential travel since 2013
-          </p>
-        </div>
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-clay-300">
+          Experiential travel since 2013
+        </p>
 
         <h1 className="mt-8 max-w-4xl font-serif text-[2.75rem] leading-[1.05] text-bone sm:text-6xl lg:text-7xl">
           Travel Unbounded
