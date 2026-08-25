@@ -21,11 +21,13 @@ const emptyForm = {
 };
 
 // Shared styling for inputs, so all three control types look identical.
+// Width is passed in rather than baked in, because the country code select
+// sits next to the phone number and must not stretch to full width.
 const controlClasses =
-  "w-full rounded-lg border bg-white px-3.5 py-2.5 text-ink outline-none transition placeholder:text-ink-soft/60 focus:ring-2 focus:ring-forest-500/40";
+  "rounded-lg border bg-white px-3.5 py-2.5 text-ink outline-none transition placeholder:text-ink-soft/60 focus:ring-2 focus:ring-forest-500/40";
 
-function controlStyle(hasError) {
-  return `${controlClasses} ${
+function controlStyle(hasError, widthClass = "w-full") {
+  return `${controlClasses} ${widthClass} ${
     hasError ? "border-clay-600" : "border-sand focus:border-forest-500"
   }`;
 }
@@ -188,7 +190,7 @@ export default function EnquiryForm() {
               value={formData.countryCode}
               onChange={handleChange}
               aria-label="Country code"
-              className={`${controlStyle(errors.countryCode)} w-24 shrink-0`}
+              className={`${controlStyle(errors.countryCode, "w-24")} shrink-0`}
             >
               {COUNTRY_CODES.map((country) => (
                 <option key={country.code} value={country.code}>
@@ -208,7 +210,7 @@ export default function EnquiryForm() {
               aria-describedby={
                 errors.contactNumber ? "contactNumber-error" : undefined
               }
-              className={controlStyle(errors.contactNumber)}
+              className={`${controlStyle(errors.contactNumber, "w-full")} min-w-0 flex-1`}
             />
           </div>
         </FormField>
