@@ -167,13 +167,13 @@ Creates a booking enquiry.
 curl -X POST https://travel-unbounded-omega.vercel.app/api/enquiry \
   -H "Content-Type: application/json" \
   -d '{
-    "fullName": "Priya Sharma",
+    "fullName": "Kurapati Saiteja",
     "countryCode": "+91",
-    "contactNumber": "9876543210",
-    "email": "priya@example.com",
-    "dateOfTravel": "2027-03-15",
-    "numberOfPeople": 2,
-    "numberOfChildren": 1,
+    "contactNumber": "6305656651",
+    "email": "kurapatisaitejas@gmail.com",
+    "dateOfTravel": "2026-09-01",
+    "numberOfPeople": 1,
+    "numberOfChildren": 0,
     "hotelCategory": "Deluxe"
   }'
 ```
