@@ -62,3 +62,50 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+/* Page transition. app/template.js re-mounts on every navigation, so this
+   animation replays each time a new page enters. */
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-enter {
+  animation: page-fade-in 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Continuous word marquee on the home page. */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-scroll 40s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Anyone who has asked their system to reduce motion gets none of it. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .page-enter,
+  .marquee-track {
+    animation: none;
+  }
+}

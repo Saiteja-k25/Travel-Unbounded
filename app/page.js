@@ -1,5 +1,7 @@
 import Hero from "@/components/Hero";
+import TravelNotes from "@/components/TravelNotes";
 import DestinationSection from "@/components/DestinationSection";
+import WordMarquee from "@/components/WordMarquee";
 import CtaBanner from "@/components/CtaBanner";
 import {
   indiaDestinations,
@@ -17,6 +19,8 @@ export default function Home() {
     <main className="flex-1">
       <Hero />
 
+      <TravelNotes />
+
       <DestinationSection
         id="india"
         eyebrow="Closer to home"
@@ -31,8 +35,10 @@ export default function Home() {
         title="Explore the World"
         description="Safaris, limestone bays and long northern nights, planned end to end from our Bengaluru and Nairobi offices."
         destinations={internationalDestinations}
-        className="bg-sand/40"
+        className="bg-sand/30"
       />
+
+      <WordMarquee />
 
       <CtaBanner />
     </main>
