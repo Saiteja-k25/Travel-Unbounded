@@ -230,7 +230,9 @@ export default function DestinationCarousel({ destinations, label }) {
           <li
             key={destination.id}
             style={{ willChange: "transform" }}
-            className="w-[278px] shrink-0 snap-start transition-opacity sm:w-[320px] lg:w-[352px]"
+            // w-full resolves against the track's content box, so on a phone
+            // exactly one card fills the viewport instead of one and a half.
+            className="w-full shrink-0 snap-start transition-opacity sm:w-[320px] lg:w-[352px]"
           >
             <DestinationCard destination={destination} />
           </li>
