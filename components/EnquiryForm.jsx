@@ -26,12 +26,14 @@ const emptyForm = {
 // Shared styling for inputs, so all three control types look identical.
 // Width is passed in rather than baked in, because the country code select
 // sits next to the phone number and must not stretch to full width.
+// [color-scheme:dark] tells the browser to render the native date picker and
+// number spinners dark, so they match the panel instead of flashing white.
 const controlClasses =
-  "rounded-lg border bg-white px-3.5 py-2.5 text-ink outline-none transition placeholder:text-ink-soft/60 focus:ring-2 focus:ring-forest-500/40";
+  "rounded-lg border bg-forest-900/60 px-4 py-3 text-base text-bone outline-none transition [color-scheme:dark] placeholder:text-forest-400 focus:ring-2 focus:ring-forest-400/30";
 
 function controlStyle(hasError, widthClass = "w-full") {
   return `${controlClasses} ${widthClass} ${
-    hasError ? "border-clay-600" : "border-sand focus:border-forest-500"
+    hasError ? "border-clay-400" : "border-forest-700 focus:border-forest-400"
   }`;
 }
 
@@ -117,15 +119,15 @@ export default function EnquiryForm() {
 
   if (status === "success") {
     return (
-      <div className="rounded-2xl border border-forest-200 bg-forest-50 p-8 text-center sm:p-12">
+      <div className="rounded-2xl border border-forest-700 bg-forest-800/50 p-8 text-center sm:p-12">
         <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-forest-600 text-white">
           <CheckCircle2 className="h-7 w-7" aria-hidden="true" />
         </span>
 
-        <h2 className="mt-6 font-serif text-2xl text-forest-800 sm:text-3xl">
+        <h2 className="mt-6 font-serif text-2xl text-bone sm:text-3xl">
           Enquiry received
         </h2>
-        <p className="mx-auto mt-3 max-w-md leading-relaxed text-ink-soft">
+        <p className="mx-auto mt-3 max-w-md leading-relaxed text-forest-200">
           {statusMessage}
         </p>
 
@@ -135,7 +137,7 @@ export default function EnquiryForm() {
             setStatus("idle");
             setStatusMessage("");
           }}
-          className="mt-8 rounded-full border border-forest-700 px-6 py-3 text-sm font-medium text-forest-700 transition hover:bg-forest-100"
+          className="mt-8 rounded-full border border-forest-500 px-6 py-3 text-sm font-medium text-forest-100 transition hover:bg-forest-800"
         >
           Submit another enquiry
         </button>
@@ -147,19 +149,19 @@ export default function EnquiryForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="rounded-2xl border border-sand bg-white p-6 sm:p-8"
+      className="rounded-2xl border border-forest-700 bg-forest-800/40 p-6 sm:p-8"
     >
       {status === "error" && statusMessage && (
         <div
           role="alert"
-          className="mb-6 flex items-start gap-3 rounded-lg border border-clay-200 bg-clay-50 p-4 text-sm text-clay-800"
+          className="mb-6 flex items-start gap-3 rounded-lg border border-clay-500/50 bg-clay-900/40 p-4 text-sm text-clay-200"
         >
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
           <p>{statusMessage}</p>
         </div>
       )}
 
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-x-6 gap-y-6 sm:grid-cols-2">
         <FormField
           label="Full Name"
           htmlFor="fullName"
@@ -373,7 +375,7 @@ export default function EnquiryForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-forest-700 px-8 py-3.5 font-medium text-bone transition hover:bg-forest-800 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+        className="mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-clay-600 px-8 py-4 font-medium text-white transition hover:bg-clay-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {isSubmitting ? (
           <>
@@ -388,7 +390,7 @@ export default function EnquiryForm() {
         )}
       </button>
 
-      <p className="mt-4 text-xs text-ink-soft">
+      <p className="mt-4 text-xs text-forest-400">
         We reply to every enquiry within 24 hours. Your details are never shared
         with third parties.
       </p>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import Container from "./Container";
 import Logo from "./Logo";
+import SocialLinks from "./SocialLinks";
 import { offices } from "@/data/offices";
 
 const quickLinks = [
@@ -24,6 +25,10 @@ export default function Footer() {
               destination we recommend has been personally experienced by our
               team.
             </p>
+
+            <div className="mt-8">
+              <SocialLinks />
+            </div>
           </div>
 
           <div>

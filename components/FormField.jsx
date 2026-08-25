@@ -1,5 +1,6 @@
 // Label + control + error message wrapper, so every field in the form has the
 // same spacing, the same error styling and the same accessibility wiring.
+// Colours assume the dark forest panel the enquiry form sits on.
 export default function FormField({
   label,
   htmlFor,
@@ -11,10 +12,10 @@ export default function FormField({
 }) {
   return (
     <div className={className}>
-      <label htmlFor={htmlFor} className="block text-sm font-medium text-ink">
+      <label htmlFor={htmlFor} className="block text-sm font-medium text-forest-100">
         {label}
         {required && (
-          <span className="text-clay-700" aria-hidden="true">
+          <span className="text-clay-300" aria-hidden="true">
             {" "}
             *
           </span>
@@ -23,13 +24,13 @@ export default function FormField({
 
       <div className="mt-2">{children}</div>
 
-      {hint && !error && <p className="mt-1.5 text-xs text-ink-soft">{hint}</p>}
+      {hint && !error && <p className="mt-2 text-xs text-forest-300">{hint}</p>}
 
       {error && (
         <p
           id={`${htmlFor}-error`}
           role="alert"
-          className="mt-1.5 text-sm text-clay-700"
+          className="mt-2 text-sm text-clay-300"
         >
           {error}
         </p>

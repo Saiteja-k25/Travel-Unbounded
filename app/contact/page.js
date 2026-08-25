@@ -27,15 +27,15 @@ export default function ContactPage() {
         imageAlt="Paper travel maps spread across a table"
       />
 
-      <section className="py-20 sm:py-28 lg:py-32">
+      <section className="bg-forest-900 py-20 sm:py-28 lg:py-32">
         <Container>
-          <div className="grid gap-12 lg:grid-cols-[1fr_360px] lg:gap-16">
+          <div className="grid gap-14 lg:grid-cols-[1.5fr_340px] lg:gap-16">
             {/* The form itself */}
             <div>
-              <h2 className="font-serif text-2xl text-forest-800 sm:text-3xl">
+              <h2 className="font-serif text-2xl text-bone sm:text-3xl">
                 Booking enquiry
               </h2>
-              <p className="mt-3 max-w-xl leading-relaxed text-ink-soft">
+              <p className="mt-3 max-w-xl leading-relaxed text-forest-200">
                 Fields marked with an asterisk are required. Nothing is booked
                 at this stage &mdash; this simply starts the conversation.
               </p>
@@ -47,8 +47,8 @@ export default function ContactPage() {
 
             {/* Supporting contact information */}
             <aside className="space-y-6">
-              <div className="rounded-2xl border border-sand bg-white p-7">
-                <h2 className="font-serif text-xl text-forest-800">
+              <div className="rounded-2xl border border-forest-700 bg-forest-800/40 p-7">
+                <h2 className="font-serif text-xl text-bone">
                   Prefer to talk?
                 </h2>
 
@@ -57,14 +57,14 @@ export default function ContactPage() {
                     const Icon = detail.icon;
                     return (
                       <li key={detail.label} className="flex gap-3">
-                        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-forest-50 text-forest-700">
+                        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-forest-800 text-clay-300">
                           <Icon className="h-4 w-4" aria-hidden="true" />
                         </span>
                         <div>
-                          <p className="text-xs uppercase tracking-widest text-ink-soft">
+                          <p className="text-xs uppercase tracking-widest text-forest-400">
                             {detail.label}
                           </p>
-                          <p className="text-sm font-medium text-ink">
+                          <p className="text-sm font-medium text-forest-100">
                             {detail.value}
                           </p>
                         </div>
@@ -74,18 +74,18 @@ export default function ContactPage() {
                 </ul>
               </div>
 
-              <div className="rounded-2xl border border-sand bg-sand/40 p-7">
-                <h2 className="font-serif text-xl text-forest-800">
+              <div className="rounded-2xl border border-forest-700 bg-forest-800/20 p-7">
+                <h2 className="font-serif text-xl text-bone">
                   Visit an office
                 </h2>
 
                 <ul className="mt-5 space-y-5">
                   {offices.map((office) => (
                     <li key={office.id}>
-                      <p className="text-sm font-medium text-ink">
+                      <p className="text-sm font-medium text-bone">
                         {office.city}
                       </p>
-                      <address className="mt-1 space-y-0.5 text-sm not-italic leading-relaxed text-ink-soft">
+                      <address className="mt-1 space-y-0.5 text-sm not-italic leading-relaxed text-forest-300">
                         {office.addressLines.map((line) => (
                           <p key={line}>{line}</p>
                         ))}
