@@ -1,3 +1,4 @@
+import Container from "./Container";
 import DestinationCard from "./DestinationCard";
 
 // A titled block of destination cards. Both the India and the International
@@ -8,24 +9,27 @@ export default function DestinationSection({
   title,
   description,
   destinations,
+  className = "",
 }) {
   return (
-    <section id={id} className="py-16 sm:py-20">
-      <div className="mx-auto w-full max-w-6xl px-6">
-        <p className="text-sm font-medium uppercase tracking-widest text-clay-700">
+    <section id={id} className={`scroll-mt-20 py-16 sm:py-24 ${className}`}>
+      <Container>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-clay-700">
           {eyebrow}
         </p>
-        <h2 className="mt-2 font-serif text-3xl text-forest-800 sm:text-4xl">
+        <h2 className="mt-3 max-w-2xl font-serif text-3xl leading-tight text-forest-800 sm:text-4xl">
           {title}
         </h2>
-        <p className="mt-3 max-w-2xl text-ink-soft">{description}</p>
+        <p className="mt-4 max-w-2xl leading-relaxed text-ink-soft">
+          {description}
+        </p>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {destinations.map((destination) => (
             <DestinationCard key={destination.id} destination={destination} />
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
