@@ -43,10 +43,11 @@ export default function TravelNotes() {
         />
 
         {/* Top: continues the hero's darkness, then dissolves into the photo. */}
-        <div className="absolute inset-x-0 top-0 h-3/5 bg-gradient-to-b from-forest-900 via-forest-900/75 to-transparent" />
+        <div className="fade-out-of-forest absolute inset-x-0 top-0 h-3/5" />
 
-        {/* Bottom: dissolves the photo into the cream page below. */}
-        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-bone via-bone/70 to-transparent" />
+        {/* Bottom: a long, eased dissolve into the cream page below, so the
+            photograph has no edge - it simply runs out. */}
+        <div className="fade-into-bone absolute inset-x-0 bottom-0 h-[65%]" />
       </div>
 
       {/* Everything below the band sits on the cream page again. */}

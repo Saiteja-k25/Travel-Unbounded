@@ -14,8 +14,8 @@ export default function Hero() {
   return (
     <section className="relative z-10 flex min-h-[92vh] items-end overflow-hidden">
       <Image
-        src="https://images.unsplash.com/photo-1585573552022-3889a9edeca2?auto=format&fit=crop&w=2000&q=70"
-        alt="Snow-capped mountain range at first light"
+        src="https://images.unsplash.com/photo-1641667838410-b257ca266e38?auto=format&fit=crop&w=2000&h=1250&q=72"
+        alt="Dense evergreen forest in deep shadow"
         fill
         priority
         sizes="100vw"
