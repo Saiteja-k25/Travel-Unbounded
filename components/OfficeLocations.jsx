@@ -4,7 +4,7 @@ import { offices } from "@/data/offices";
 
 export default function OfficeLocations() {
   return (
-    <section className="py-16 sm:py-24">
+    <section className="py-20 sm:py-28 lg:py-32">
       <Container>
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-clay-700">
           Our locations

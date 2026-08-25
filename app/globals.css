@@ -46,3 +46,19 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
+
+/* The card sliders scroll horizontally; the scrollbar itself would sit under
+   the cards and look like a stray line, so it is hidden. Scrolling, dragging
+   and keyboard navigation all still work. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Anchor links land below the sticky header instead of underneath it. */
+html {
+  scroll-behavior: smooth;
+}

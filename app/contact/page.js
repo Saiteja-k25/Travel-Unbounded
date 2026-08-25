@@ -23,13 +23,13 @@ export default function ContactPage() {
         eyebrow="Plan your trip"
         title="Tell us where you want to wake up"
         description="Share a few details and one of our travel experts will come back to you within 24 hours with a route worth taking."
-        image="https://images.unsplash.com/photo-1619837374214-f5b9eb80876d?auto=format&fit=crop&w=2000&q=70"
-        imageAlt="Turquoise rivers meeting between mountains in Ladakh"
+        image="https://images.unsplash.com/photo-1532154066703-3973764c81fe?auto=format&fit=crop&w=2000&q=70"
+        imageAlt="Paper travel maps spread across a table"
       />
 
-      <section className="py-16 sm:py-24">
+      <section className="py-20 sm:py-28 lg:py-32">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-[1fr_360px] lg:gap-14">
+          <div className="grid gap-12 lg:grid-cols-[1fr_360px] lg:gap-16">
             {/* The form itself */}
             <div>
               <h2 className="font-serif text-2xl text-forest-800 sm:text-3xl">

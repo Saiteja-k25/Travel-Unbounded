@@ -30,7 +30,7 @@ const values = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="bg-sand/40 py-16 sm:py-24">
+    <section className="bg-sand/40 py-20 sm:py-28 lg:py-32">
       <Container>
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-clay-700">
           Why choose us

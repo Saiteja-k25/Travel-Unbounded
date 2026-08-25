@@ -23,9 +23,9 @@ export default function AboutPage() {
       />
 
       {/* Company story */}
-      <section className="py-16 sm:py-24">
+      <section className="py-20 sm:py-28 lg:py-32">
         <Container>
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-clay-700">
                 Our story
@@ -56,8 +56,8 @@ export default function AboutPage() {
 
             <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
               <Image
-                src="https://images.unsplash.com/photo-1559494487-a5bbc635ed2b?auto=format&fit=crop&w=1200&q=70"
-                alt="Safari vehicle beside an antelope in the Masai Mara"
+                src="https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1400&q=70"
+                alt="Traveller watching the sun set over the savannah from a safari vehicle"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover"

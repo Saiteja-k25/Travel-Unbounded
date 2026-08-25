@@ -1,8 +1,8 @@
 import Container from "./Container";
-import DestinationCard from "./DestinationCard";
+import DestinationCarousel from "./DestinationCarousel";
 
-// A titled block of destination cards. Both the India and the International
-// sections on the home page are this same component with different props.
+// A titled block of destination cards in a draggable slider. Both the India
+// and the International sections are this same component with different props.
 export default function DestinationSection({
   id,
   eyebrow,
@@ -12,22 +12,23 @@ export default function DestinationSection({
   className = "",
 }) {
   return (
-    <section id={id} className={`scroll-mt-20 py-16 sm:py-24 ${className}`}>
+    <section
+      id={id}
+      className={`scroll-mt-24 py-20 sm:py-28 lg:py-32 ${className}`}
+    >
       <Container>
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-clay-700">
-          {eyebrow}
-        </p>
-        <h2 className="mt-3 max-w-2xl font-serif text-3xl leading-tight text-forest-800 sm:text-4xl">
-          {title}
-        </h2>
-        <p className="mt-4 max-w-2xl leading-relaxed text-ink-soft">
-          {description}
-        </p>
+        <div className="max-w-2xl">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-clay-700">
+            {eyebrow}
+          </p>
+          <h2 className="mt-4 font-serif text-3xl leading-[1.15] text-forest-800 sm:text-4xl lg:text-5xl">
+            {title}
+          </h2>
+          <p className="mt-5 leading-relaxed text-ink-soft">{description}</p>
+        </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {destinations.map((destination) => (
-            <DestinationCard key={destination.id} destination={destination} />
-          ))}
+        <div className="mt-14">
+          <DestinationCarousel destinations={destinations} label={title} />
         </div>
       </Container>
     </section>

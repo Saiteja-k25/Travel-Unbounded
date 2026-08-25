@@ -9,7 +9,7 @@ export default function CtaBanner({
 }) {
   return (
     <section className="bg-forest-800">
-      <Container className="py-16 sm:py-20">
+      <Container className="py-20 sm:py-28">
         <div className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl">
             <h2 className="font-serif text-3xl text-bone sm:text-4xl">{title}</h2>
