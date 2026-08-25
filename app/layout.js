@@ -1,11 +1,8 @@
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
-/*
-  next/font downloads these at build time and self-hosts them from our own
-  domain, so there are no requests to Google at runtime and no layout shift.
-  Each font exposes a CSS variable that globals.css reads inside @theme.
-*/
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
@@ -24,13 +21,18 @@ export const metadata = {
     "Travel Unbounded designs personally-vetted journeys across India and the world, blending comfort, culture and raw nature.",
 };
 
+// Navbar and Footer live here so every page gets them automatically.
 export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
       className={`${fraunces.variable} ${jakarta.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
