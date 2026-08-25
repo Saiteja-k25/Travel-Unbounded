@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  Tailwind v4 is configured here in CSS instead of a tailwind.config.js file.
+  Every variable inside @theme becomes a utility class, e.g.
+  --color-forest-700  ->  bg-forest-700 / text-forest-700 / border-forest-700
+*/
+@theme {
+  /* Fonts. The --font-* values are set by next/font in app/layout.js */
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Primary: deep forest green */
+  --color-forest-50: #f1f7f4;
+  --color-forest-100: #dcebe3;
+  --color-forest-200: #bad8c8;
+  --color-forest-300: #8fbda6;
+  --color-forest-400: #5f9c81;
+  --color-forest-500: #3f7f63;
+  --color-forest-600: #2e654e;
+  --color-forest-700: #265140;
+  --color-forest-800: #1f4134;
+  --color-forest-900: #16302a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Accent: terracotta clay */
+  --color-clay-50: #fdf5f2;
+  --color-clay-100: #fae8e1;
+  --color-clay-200: #f4cfc1;
+  --color-clay-300: #ebae97;
+  --color-clay-400: #e08a6b;
+  --color-clay-500: #d26e4a;
+  --color-clay-600: #bd5836;
+  --color-clay-700: #9d452c;
+  --color-clay-800: #7f3a28;
+  --color-clay-900: #683224;
+
+  /* Warm neutrals */
+  --color-bone: #faf7f2; /* page background */
+  --color-sand: #f0e9df; /* subtle raised surfaces, borders */
+  --color-ink: #1c1a17; /* body text */
+  --color-ink-soft: #57534a; /* muted / secondary text */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bone);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
 }
