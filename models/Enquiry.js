@@ -47,6 +47,16 @@ const enquirySchema = new mongoose.Schema(
       required: true,
       enum: HOTEL_CATEGORIES,
     },
+    // Optional. Which destination prompted the enquiry, if the visitor said.
+    destination: {
+      type: String,
+      default: null,
+    },
+    // Optional. Rough trip length in nights.
+    tripDurationNights: {
+      type: Number,
+      default: null,
+    },
   },
   {
     // Adds createdAt and updatedAt automatically.

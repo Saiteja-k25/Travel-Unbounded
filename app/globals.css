@@ -80,6 +80,29 @@ html {
   animation: page-fade-in 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* The forest band settles from slightly oversized to its natural size as it
+   scrolls into view, so the photograph appears to grow out of the dark hero
+   above it. Driven entirely by scroll position, no JavaScript. Browsers
+   without scroll-driven animation simply show the still image. */
+@keyframes band-reveal {
+  from {
+    transform: scale(1.14);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .band-reveal {
+      animation: band-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 55%;
+    }
+  }
+}
+
 /* Continuous word marquee on the home page. */
 @keyframes marquee-scroll {
   from {

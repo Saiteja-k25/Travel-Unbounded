@@ -12,7 +12,7 @@ const stats = [
 
 export default function Hero() {
   return (
-    <section className="relative isolate flex min-h-[92vh] items-end overflow-hidden">
+    <section className="relative z-10 flex min-h-[92vh] items-end overflow-hidden">
       <Image
         src="https://images.unsplash.com/photo-1585573552022-3889a9edeca2?auto=format&fit=crop&w=2000&q=70"
         alt="Snow-capped mountain range at first light"
@@ -24,7 +24,7 @@ export default function Hero() {
 
       {/* Two overlays: a vertical fade for text contrast, and a warm tint so
           the photo sits inside the site palette instead of fighting it. */}
-      <div className="absolute inset-0 bg-gradient-to-t from-forest-900 via-forest-900/70 to-forest-900/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-forest-900 from-15% via-forest-900/70 to-forest-900/20" />
       <div className="absolute inset-0 bg-clay-900/10 mix-blend-multiply" />
 
       <Container className="relative pb-16 pt-40 sm:pb-24 sm:pt-48">

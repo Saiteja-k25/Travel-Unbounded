@@ -70,33 +70,39 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-sand/70 bg-bone/90 backdrop-blur-md">
-      <Container>
-        <nav
-          aria-label="Main"
-          className="flex h-[72px] items-center justify-between gap-6 sm:h-20"
-        >
-          <Link href="/" aria-label="Travel Unbounded, home">
-            <Logo />
-          </Link>
-
-          <button
-            ref={openButtonRef}
-            type="button"
-            onClick={() => setIsOpen(true)}
-            aria-expanded={isOpen}
-            aria-controls="site-menu"
-            className="group flex items-center gap-3 rounded-full border border-forest-200 py-2.5 pl-5 pr-2.5 transition hover:border-forest-700"
+    // The panel is deliberately a SIBLING of <header>, not a child of it. The
+    // header uses backdrop-blur, and backdrop-filter makes an element the
+    // containing block for position:fixed descendants - nested inside, the
+    // panel would size itself to the 72px header instead of the viewport.
+    <>
+      <header className="sticky top-0 z-50 border-b border-sand/70 bg-bone/90 backdrop-blur-md">
+        <Container>
+          <nav
+            aria-label="Main"
+            className="flex h-[72px] items-center justify-between gap-6 sm:h-20"
           >
-            <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-forest-800">
-              Menu
-            </span>
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-forest-700 text-bone transition group-hover:bg-forest-800">
-              <Menu className="h-4 w-4" aria-hidden="true" />
-            </span>
-          </button>
-        </nav>
-      </Container>
+            <Link href="/" aria-label="Travel Unbounded, home">
+              <Logo />
+            </Link>
+
+            <button
+              ref={openButtonRef}
+              type="button"
+              onClick={() => setIsOpen(true)}
+              aria-expanded={isOpen}
+              aria-controls="site-menu"
+              className="group flex items-center gap-3 rounded-full border border-forest-200 py-2.5 pl-5 pr-2.5 transition hover:border-forest-700"
+            >
+              <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-forest-800">
+                Menu
+              </span>
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-forest-700 text-bone transition group-hover:bg-forest-800">
+                <Menu className="h-4 w-4" aria-hidden="true" />
+              </span>
+            </button>
+            </nav>
+        </Container>
+      </header>
 
       {/* Slide-over panel. Kept mounted so it animates in both directions;
           pointer events are switched off and it is clipped while closed. */}
@@ -197,6 +203,6 @@ export default function Navbar() {
           </div>
         </aside>
       </div>
-    </header>
+    </>
   );
 }

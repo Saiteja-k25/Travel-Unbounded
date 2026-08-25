@@ -5,6 +5,7 @@ import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
 import FormField from "./FormField";
 import {
   COUNTRY_CODES,
+  DESTINATION_NAMES,
   HOTEL_CATEGORIES,
   validateEnquiry,
 } from "@/lib/validateEnquiry";
@@ -18,6 +19,8 @@ const emptyForm = {
   numberOfPeople: "1",
   numberOfChildren: "0",
   hotelCategory: "",
+  destination: "",
+  tripDurationNights: "",
 };
 
 // Shared styling for inputs, so all three control types look identical.
@@ -156,13 +159,12 @@ export default function EnquiryForm() {
         </div>
       )}
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         <FormField
           label="Full Name"
           htmlFor="fullName"
           error={errors.fullName}
           required
-          className="sm:col-span-2"
         >
           <input
             id="fullName"
@@ -190,11 +192,11 @@ export default function EnquiryForm() {
               value={formData.countryCode}
               onChange={handleChange}
               aria-label="Country code"
-              className={`${controlStyle(errors.countryCode, "w-24")} shrink-0`}
+              className={`${controlStyle(errors.countryCode, "w-[104px]")} shrink-0`}
             >
               {COUNTRY_CODES.map((country) => (
                 <option key={country.code} value={country.code}>
-                  {country.code}
+                  {country.flag} {country.code}
                 </option>
               ))}
             </select>
@@ -227,6 +229,32 @@ export default function EnquiryForm() {
             aria-describedby={errors.email ? "email-error" : undefined}
             className={controlStyle(errors.email)}
           />
+        </FormField>
+
+        <FormField
+          label="Destination of Interest"
+          htmlFor="destination"
+          error={errors.destination}
+          hint="Optional. Not sure yet? Leave it blank."
+        >
+          <select
+            id="destination"
+            name="destination"
+            value={formData.destination}
+            onChange={handleChange}
+            aria-invalid={Boolean(errors.destination)}
+            aria-describedby={
+              errors.destination ? "destination-error" : undefined
+            }
+            className={controlStyle(errors.destination)}
+          >
+            <option value="">No preference yet</option>
+            {DESTINATION_NAMES.map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
         </FormField>
 
         <FormField
@@ -315,6 +343,29 @@ export default function EnquiryForm() {
               errors.numberOfChildren ? "numberOfChildren-error" : undefined
             }
             className={controlStyle(errors.numberOfChildren)}
+          />
+        </FormField>
+
+        <FormField
+          label="Trip Length"
+          htmlFor="tripDurationNights"
+          error={errors.tripDurationNights}
+          hint="Optional. Number of nights."
+        >
+          <input
+            id="tripDurationNights"
+            name="tripDurationNights"
+            type="number"
+            min="1"
+            max="90"
+            placeholder="7"
+            value={formData.tripDurationNights}
+            onChange={handleChange}
+            aria-invalid={Boolean(errors.tripDurationNights)}
+            aria-describedby={
+              errors.tripDurationNights ? "tripDurationNights-error" : undefined
+            }
+            className={controlStyle(errors.tripDurationNights)}
           />
         </FormField>
       </div>

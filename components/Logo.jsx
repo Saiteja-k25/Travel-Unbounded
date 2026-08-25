@@ -34,22 +34,24 @@ export default function Logo({ tone = "dark", className = "" }) {
             </linearGradient>
           </defs>
 
-          {/* Two overlapping rings form a clean, symmetrical lemniscate. */}
+          {/* Two rings that overlap (centres 16 apart, radius 9 each) read as
+              a symmetrical infinity. Pull them further apart and they become
+              two separate circles. */}
           <circle
-            cx="14.5"
+            cx="16"
             cy="12"
-            r="8.5"
+            r="9"
             fill="none"
             stroke="url(#tu-mark)"
-            strokeWidth="4"
+            strokeWidth="3.4"
           />
           <circle
-            cx="33.5"
+            cx="32"
             cy="12"
-            r="8.5"
+            r="9"
             fill="none"
             stroke="url(#tu-mark)"
-            strokeWidth="4"
+            strokeWidth="3.4"
           />
         </svg>
       </span>
