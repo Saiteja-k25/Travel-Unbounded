@@ -20,8 +20,15 @@ const sectionLinks = [
   { label: "International", href: "/#international" },
 ];
 
+// How far down the page you must be before the header is allowed to hide, and
+// how much movement counts as a real scroll rather than trackpad jitter.
+const HIDE_AFTER_PX = 90;
+const SCROLL_THRESHOLD_PX = 6;
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
   const closeButtonRef = useRef(null);
   const openButtonRef = useRef(null);
 
@@ -65,9 +72,38 @@ export default function Navbar() {
     };
   }, [isOpen]);
 
+  // Hide the header while the reader is moving down the page, bring it back
+  // the moment they move up. Near the top of the page it always stays put.
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    function handleScroll() {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+
+      // Ignore sub-pixel and trackpad jitter, otherwise the header flickers.
+      if (Math.abs(delta) < SCROLL_THRESHOLD_PX) return;
+
+      if (currentY < HIDE_AFTER_PX) {
+        setIsHidden(false);
+      } else {
+        setIsHidden(delta > 0);
+      }
+
+      lastScrollY.current = currentY;
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   function close() {
     setIsOpen(false);
   }
+
+  // The panel covers the page, so the header stays put while it is open.
+  const isHeaderVisible = isOpen || !isHidden;
 
   return (
     // The panel is deliberately a SIBLING of <header>, not a child of it. The
@@ -75,7 +111,22 @@ export default function Navbar() {
     // containing block for position:fixed descendants - nested inside, the
     // panel would size itself to the 72px header instead of the viewport.
     <>
-      <header className="sticky top-0 z-50 border-b border-sand/70 bg-bone/90 backdrop-blur-md">
+      {/* A thin strip along the very top, present only while the header is
+          hidden. Reaching for the top of the screen with the mouse brings the
+          header back, the same way a full-screen app reveals its chrome. */}
+      {!isHeaderVisible && (
+        <div
+          onMouseEnter={() => setIsHidden(false)}
+          aria-hidden="true"
+          className="fixed inset-x-0 top-0 z-40 h-4"
+        />
+      )}
+
+      <header
+        className={`sticky top-0 z-50 border-b border-sand/70 bg-bone/90 backdrop-blur-md transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+          isHeaderVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <Container>
           <nav
             aria-label="Main"
