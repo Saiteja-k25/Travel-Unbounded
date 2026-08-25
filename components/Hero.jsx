@@ -36,9 +36,12 @@ export default function Hero() {
         </div>
 
         <h1 className="mt-8 max-w-4xl font-serif text-[2.75rem] leading-[1.05] text-bone sm:text-6xl lg:text-7xl">
-          Journeys built around
-          <span className="block text-clay-200">the people taking them</span>
+          Travel Unbounded
         </h1>
+
+        <p className="mt-4 font-serif text-2xl text-clay-200 sm:text-3xl lg:text-4xl">
+          Holidays Made With Love
+        </p>
 
         <p className="mt-8 max-w-xl text-base leading-relaxed text-forest-100 sm:text-lg">
           Handcrafted expeditions across Kerala&rsquo;s backwaters, Ladakh&rsquo;s
