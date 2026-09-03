@@ -3,7 +3,7 @@
 A production-style travel company website built for the Travel Unbounded Full Stack Developer assignment, Phases 1 and 2.
 
 - **Live demo:** https://travel-unbounded-omega.vercel.app
-- **Repository:** https://github.com/Saiteja-k25/Travel-Unbounded
+- **Admin Dashboard:** https://travel-unbounded-omega.vercel.app/admin/login
 
 ## Admin test credentials
 
