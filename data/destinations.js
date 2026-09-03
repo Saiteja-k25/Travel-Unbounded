@@ -1,7 +1,16 @@
-// Static destination data. The assignment states destination and pricing data
-// can be dummy/hardcoded, so there is deliberately no database behind this.
+// Seed data for the destinations collection.
+//
+// This was the site's source of truth in Phase 1. Destinations now live in
+// MongoDB so they can be created, edited and deleted from the admin
+// dashboard, and this file has two remaining jobs:
+//
+//   1. scripts/seedDestinations.mjs loads the collection from it
+//   2. lib/destinations.js falls back to it if the database cannot be reached,
+//      so the home page degrades to stale data instead of an error
+//
 // Images are hotlinked from Unsplash (free to use); the host is allowlisted in
-// next.config.mjs so next/image can optimise them.
+// next.config.mjs so next/image can optimise them, and validateDestination
+// enforces that same allowlist on anything an admin adds.
 
 export const destinations = [
   {
@@ -125,12 +134,3 @@ export const destinations = [
     category: "international",
   },
 ];
-
-// Derived lists so pages don't repeat the same filter logic.
-export const indiaDestinations = destinations.filter(
-  (destination) => destination.category === "india"
-);
-
-export const internationalDestinations = destinations.filter(
-  (destination) => destination.category === "international"
-);

@@ -5,7 +5,6 @@ import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
 import FormField from "./FormField";
 import {
   COUNTRY_CODES,
-  DESTINATION_NAMES,
   HOTEL_CATEGORIES,
   validateEnquiry,
 } from "@/lib/validateEnquiry";
@@ -48,7 +47,16 @@ function getTomorrow() {
 // defaults to empty, so with no prop passed this form behaves exactly as it
 // always has. Only the starting values change - every validation rule below,
 // client and server, is untouched and still runs on whatever is submitted.
-export default function EnquiryForm({ initialValues = {} }) {
+//
+// `destinationNames` is passed in because destinations moved from a static
+// file into MongoDB, and this component runs in the browser where there is no
+// database access. The contact page reads the list on the server and hands it
+// down. The API route reads its own copy for the check that actually guards
+// what gets stored - this one only powers the dropdown and instant feedback.
+export default function EnquiryForm({
+  initialValues = {},
+  destinationNames = [],
+}) {
   // Prefilled values sit on top of the empty defaults. Anything the chat could
   // not work out is absent from initialValues, so that field keeps its default.
   const [formData, setFormData] = useState({ ...emptyForm, ...initialValues });
@@ -67,10 +75,10 @@ export default function EnquiryForm({ initialValues = {} }) {
     // Once a field has been flagged, re-check it as the user types so the
     // error clears the moment it is fixed.
     if (errors[name]) {
-      const { errors: freshErrors } = validateEnquiry({
-        ...formData,
-        [name]: value,
-      });
+      const { errors: freshErrors } = validateEnquiry(
+        { ...formData, [name]: value },
+        { allowedDestinations: destinationNames }
+      );
       setErrors((previous) => ({ ...previous, [name]: freshErrors[name] }));
     }
   }
@@ -79,7 +87,9 @@ export default function EnquiryForm({ initialValues = {} }) {
     event.preventDefault();
 
     // Client-side validation first: instant feedback, no wasted network call.
-    const { isValid, errors: clientErrors } = validateEnquiry(formData);
+    const { isValid, errors: clientErrors } = validateEnquiry(formData, {
+      allowedDestinations: destinationNames,
+    });
 
     if (!isValid) {
       setErrors(clientErrors);
@@ -257,7 +267,7 @@ export default function EnquiryForm({ initialValues = {} }) {
             className={controlStyle(errors.destination)}
           >
             <option value="">No preference yet</option>
-            {DESTINATION_NAMES.map((name) => (
+            {destinationNames.map((name) => (
               <option key={name} value={name}>
                 {name}
               </option>

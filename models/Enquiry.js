@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { HOTEL_CATEGORIES } from "@/lib/validateEnquiry";
+import { ENQUIRY_STATUSES, HOTEL_CATEGORIES } from "@/lib/validateEnquiry";
 
 // Schema for a booking enquiry. The API route validates input before it gets
 // here, but these rules are a second safety net at the database layer.
@@ -56,6 +56,19 @@ const enquirySchema = new mongoose.Schema(
     tripDurationNights: {
       type: Number,
       default: null,
+    },
+    // How far the team has taken this enquiry. Set only from the admin
+    // dashboard, never by the public form: POST /api/enquiry saves the
+    // validator's cleaned output rather than the request body, so a visitor
+    // cannot post a status of their choosing - it always starts at "New".
+    //
+    // Indexed because the dashboard filters and groups by it.
+    status: {
+      type: String,
+      required: true,
+      enum: ENQUIRY_STATUSES,
+      default: ENQUIRY_STATUSES[0],
+      index: true,
     },
   },
   {

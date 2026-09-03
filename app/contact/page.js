@@ -4,6 +4,12 @@ import Container from "@/components/Container";
 import EnquiryForm from "@/components/EnquiryForm";
 import { offices } from "@/data/offices";
 import { parseChatPrefill } from "@/lib/prefillFromChat";
+import { getDestinationNames } from "@/lib/destinations";
+
+// Destinations are editable from the admin dashboard, so this page reads them
+// per request rather than being baked in at build time. Without this, adding a
+// destination would not appear in the enquiry form until the next deploy.
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Plan Your Trip | Travel Unbounded",
@@ -23,7 +29,13 @@ const contactDetails = [
 // visitor-editable, so nothing in it is trusted.
 export default async function ContactPage({ searchParams }) {
   const params = (await searchParams) ?? {};
-  const prefill = parseChatPrefill(params);
+
+  // Read from the database here, on the server, and hand the plain list down.
+  // The form needs it for its dropdown, and parseChatPrefill needs it to turn
+  // the chat's free text into a real destination name.
+  const destinationNames = await getDestinationNames();
+
+  const prefill = parseChatPrefill(params, destinationNames);
   const isPrefilled = Object.keys(prefill).length > 0;
 
   return (
@@ -61,7 +73,10 @@ export default async function ContactPage({ searchParams }) {
               )}
 
               <div className="mt-8">
-                <EnquiryForm initialValues={prefill} />
+                <EnquiryForm
+                  initialValues={prefill}
+                  destinationNames={destinationNames}
+                />
               </div>
             </div>
 

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:destinations": "node scripts/seedDestinations.mjs",
+    "backfill:status": "node scripts/backfillEnquiryStatus.mjs"
   },
   "dependencies": {
     "groq-sdk": "^1.6.0",

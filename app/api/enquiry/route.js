@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import Enquiry from "@/models/Enquiry";
 import { validateEnquiry } from "@/lib/validateEnquiry";
+import { getDestinationNames } from "@/lib/destinations";
 
 // POST /api/enquiry
 // Flow: parse -> validate -> connect -> save -> respond.
@@ -19,7 +20,16 @@ export async function POST(request) {
 
   // 2. Validate on the server. The browser already ran these same rules, but
   // anyone can POST here directly, so client-side validation proves nothing.
-  const { isValid, errors, data } = validateEnquiry(body);
+  //
+  // The destination whitelist now comes from the database rather than a static
+  // file, so it is read here and handed to the validator. This is the check
+  // that actually guards what gets stored - the form's copy is only for
+  // instant feedback.
+  const allowedDestinations = await getDestinationNames();
+
+  const { isValid, errors, data } = validateEnquiry(body, {
+    allowedDestinations,
+  });
 
   if (!isValid) {
     return NextResponse.json(
