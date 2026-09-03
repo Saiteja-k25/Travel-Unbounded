@@ -15,7 +15,8 @@
     "check:enquiries-api": "node scripts/checkEnquiriesApi.mjs",
     "check:destinations-api": "node scripts/checkDestinationsApi.mjs",
     "check:analytics-api": "node scripts/checkAnalyticsApi.mjs",
-    "check:self-signup": "node scripts/checkSelfSignup.mjs"
+    "check:self-signup": "node scripts/checkSelfSignup.mjs",
+    "check:admin-allowlist": "node scripts/checkAdminAllowlist.mjs"
   },
   "dependencies": {
     "firebase": "^12.18.0",
