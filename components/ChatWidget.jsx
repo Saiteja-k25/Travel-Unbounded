@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   AlertCircle,
   MessageCircle,
+  PhoneCall,
   RotateCcw,
   Send,
   Sparkles,
   X,
 } from "lucide-react";
 import ItineraryCards from "./ItineraryCards";
+import { buildChatPrefillQuery } from "@/lib/prefillFromChat";
 
 // Sarathi, the floating AI trip-planner widget. Mounted once in app/layout.js
 // so it is available on every page.
@@ -55,6 +58,10 @@ export default function ChatWidget() {
   // Transport and validation problems, shown as a banner above the input.
   // Failures the AI itself reports arrive as a normal assistant turn instead.
   const [error, setError] = useState("");
+  // The most recent slots Sarathi has gathered. Kept separately from the
+  // messages so the callback link always reflects the latest turn without
+  // having to search back through the transcript.
+  const [collected, setCollected] = useState(null);
 
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
@@ -128,6 +135,7 @@ export default function ChatWidget() {
             itinerary: result.itinerary,
           },
         ]);
+        setCollected(result.collected);
         return;
       }
 
@@ -164,8 +172,25 @@ export default function ChatWidget() {
     setMessages([GREETING]);
     setInput("");
     setError("");
+    setCollected(null);
     inputRef.current?.focus();
   }
+
+  // Sarathi cannot take a booking or arrange a call - the enquiry form is the
+  // only thing that actually reaches the team - so the callback button hands
+  // the visitor over to it, carrying across whatever has been worked out so
+  // far. Anything that could not be resolved into a valid form value is simply
+  // left out, and that field arrives empty.
+  // The most recent itinerary, if one has been produced. Its destination field
+  // names a real place, which the collected slots often do not.
+  const latestItinerary = [...messages]
+    .reverse()
+    .find((message) => message.itinerary)?.itinerary;
+
+  const prefillQuery = collected
+    ? buildChatPrefillQuery(collected, latestItinerary)
+    : "";
+  const callbackHref = prefillQuery ? `/contact?${prefillQuery}` : "/contact";
 
   return (
     <>
@@ -278,15 +303,22 @@ export default function ChatWidget() {
             {/* Typing indicator */}
             {isLoading && (
               <div className="flex flex-col">
-                <div className="inline-flex w-fit items-center gap-1.5 rounded-2xl border border-sand bg-white px-4 py-3.5">
-                  <span className="sr-only">Sarathi is typing</span>
-                  {[0, 150, 300].map((delay) => (
-                    <span
-                      key={delay}
-                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-forest-400 motion-reduce:animate-none"
-                      style={{ animationDelay: `${delay}ms` }}
-                    />
-                  ))}
+                <div className="inline-flex w-fit items-center gap-2 rounded-2xl border border-sand bg-white px-3.5 py-2.5">
+                  <span className="text-xs text-ink-soft">
+                    Sarathi is typing
+                  </span>
+
+                  {/* The delays stagger the shared typing-wave animation so
+                      the dots travel left to right. */}
+                  <span className="flex items-center gap-1">
+                    {[0, 180, 360].map((delay) => (
+                      <span
+                        key={delay}
+                        className="typing-dot h-1.5 w-1.5 rounded-full bg-forest-500"
+                        style={{ animationDelay: `${delay}ms` }}
+                      />
+                    ))}
+                  </span>
                 </div>
               </div>
             )}
@@ -322,6 +354,18 @@ export default function ChatWidget() {
                 {error}
               </p>
             )}
+
+            {/* Kept outside the isFull branch below so it is reachable at every
+                point in the conversation - including once the message limit is
+                hit, where handing over to a person matters most. */}
+            <Link
+              href={callbackHref}
+              onClick={() => setIsOpen(false)}
+              className="mb-2.5 flex items-center justify-center gap-2 rounded-full border border-clay-300 bg-clay-50 px-4 py-2 text-xs font-medium text-clay-800 transition hover:bg-clay-100"
+            >
+              <PhoneCall className="h-3.5 w-3.5" aria-hidden="true" />
+              Request a callback
+            </Link>
 
             {isFull ? (
               <div className="text-center">

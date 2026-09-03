@@ -147,6 +147,28 @@ html {
   animation-play-state: paused;
 }
 
+/* Sarathi's typing indicator. Three dots that rise and fade in sequence, so a
+   wait of a second or two reads as the assistant thinking rather than as a
+   stalled panel. The stagger comes from an inline animation-delay on each dot
+   in ChatWidget.jsx, which is why this is one class rather than three. */
+@keyframes typing-wave {
+  0%,
+  70%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+
+  35% {
+    transform: translateY(-0.3rem);
+    opacity: 1;
+  }
+}
+
+.typing-dot {
+  animation: typing-wave 1.3s ease-in-out infinite;
+}
+
 /* Anyone who has asked their system to reduce motion gets none of it. */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -156,5 +178,13 @@ html {
   .marquee-track,
   .band-reveal {
     animation: none;
+  }
+
+  /* The dots would otherwise freeze at their 0% keyframe, which is faint by
+     design. Without the animation they need to be fully visible, and the
+     "Sarathi is typing" label carries the meaning anyway. */
+  .typing-dot {
+    animation: none;
+    opacity: 1;
   }
 }

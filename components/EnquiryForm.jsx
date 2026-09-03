@@ -44,8 +44,14 @@ function getTomorrow() {
   return date.toISOString().slice(0, 10);
 }
 
-export default function EnquiryForm() {
-  const [formData, setFormData] = useState(emptyForm);
+// `initialValues` lets the contact page seed fields from a Sarathi chat. It
+// defaults to empty, so with no prop passed this form behaves exactly as it
+// always has. Only the starting values change - every validation rule below,
+// client and server, is untouched and still runs on whatever is submitted.
+export default function EnquiryForm({ initialValues = {} }) {
+  // Prefilled values sit on top of the empty defaults. Anything the chat could
+  // not work out is absent from initialValues, so that field keeps its default.
+  const [formData, setFormData] = useState({ ...emptyForm, ...initialValues });
   const [errors, setErrors] = useState({});
   // One of: idle | submitting | success | error
   const [status, setStatus] = useState("idle");

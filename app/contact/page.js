@@ -3,6 +3,7 @@ import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import EnquiryForm from "@/components/EnquiryForm";
 import { offices } from "@/data/offices";
+import { parseChatPrefill } from "@/lib/prefillFromChat";
 
 export const metadata = {
   title: "Plan Your Trip | Travel Unbounded",
@@ -16,7 +17,15 @@ const contactDetails = [
   { icon: Clock, label: "Office hours", value: "Mon to Sat, 9am to 7pm IST" },
 ];
 
-export default function ContactPage() {
+// Sarathi's "Request a callback" button links here with what it worked out
+// during the chat. searchParams is a promise in this version of Next, so the
+// page is async. parseChatPrefill re-validates every value - the URL is
+// visitor-editable, so nothing in it is trusted.
+export default async function ContactPage({ searchParams }) {
+  const params = (await searchParams) ?? {};
+  const prefill = parseChatPrefill(params);
+  const isPrefilled = Object.keys(prefill).length > 0;
+
   return (
     <main className="flex-1">
       <PageHeader
@@ -40,8 +49,19 @@ export default function ContactPage() {
                 at this stage &mdash; this simply starts the conversation.
               </p>
 
+              {/* Says plainly where the values came from, so a visitor is not
+                  surprised to find fields already filled in, and knows they
+                  can be changed. */}
+              {isPrefilled && (
+                <p className="mt-5 rounded-lg border border-forest-700 bg-forest-800/40 px-4 py-3 text-sm leading-relaxed text-forest-100">
+                  We have carried a few details across from your chat with
+                  Sarathi. Please check them and change anything that is not
+                  right.
+                </p>
+              )}
+
               <div className="mt-8">
-                <EnquiryForm />
+                <EnquiryForm initialValues={prefill} />
               </div>
             </div>
 

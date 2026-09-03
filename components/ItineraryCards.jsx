@@ -21,7 +21,12 @@ function toPlainText(itinerary) {
 
   if (itinerary.destination) lines.push(itinerary.destination);
   if (itinerary.summary) lines.push("", itinerary.summary);
-  if (itinerary.estimatedCost) lines.push("", `Estimated: ${itinerary.estimatedCost}`);
+  if (itinerary.estimatedCost) {
+    lines.push(
+      "",
+      `Estimated: ${itinerary.estimatedCost} (rough estimate only - our team confirms final pricing)`
+    );
+  }
 
   lines.push("");
 
@@ -94,11 +99,19 @@ export default function ItineraryCards({ itinerary }) {
         </p>
       )}
 
+      {/* The figure is the AI's own approximation, not a quote from Travel
+          Unbounded, so it is always labelled as such. Without the caption a
+          visitor could reasonably read it as a price the company has offered. */}
       {itinerary.estimatedCost && (
-        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-forest-50 px-3 py-1.5 text-xs font-medium text-forest-700">
-          <Wallet className="h-3.5 w-3.5" aria-hidden="true" />
-          {itinerary.estimatedCost}
-        </p>
+        <div className="mt-3">
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-forest-50 px-3 py-1.5 text-xs font-medium text-forest-700">
+            <Wallet className="h-3.5 w-3.5" aria-hidden="true" />
+            {itinerary.estimatedCost}
+          </p>
+          <p className="mt-1.5 text-[0.6875rem] leading-snug text-ink-soft">
+            Rough estimate only. Our team confirms final pricing.
+          </p>
+        </div>
       )}
 
       <ol className="mt-4 space-y-3">
