@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   AlertCircle,
   MessageCircle,
@@ -15,8 +14,9 @@ import {
 import ItineraryCards from "./ItineraryCards";
 import { buildChatPrefillQuery } from "@/lib/prefillFromChat";
 
-// Sarathi, the floating AI trip-planner widget. Mounted once in app/layout.js
-// so it is available on every page.
+// Sarathi, the floating AI trip-planner widget. Mounted once in
+// app/(site)/layout.js, so it appears on every public page and on none of the
+// admin ones - it belongs to visitors planning a trip, not to the dashboard.
 //
 // The name is Sanskrit for the charioteer who steers a journey. It is also set
 // in SYSTEM_PROMPT so the assistant introduces itself the same way it is
@@ -52,7 +52,6 @@ const SUGGESTIONS = [
 ];
 
 export default function ChatWidget() {
-  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([GREETING]);
   const [input, setInput] = useState("");
@@ -178,26 +177,21 @@ export default function ChatWidget() {
     inputRef.current?.focus();
   }
 
-  // Sarathi cannot take a booking or arrange a call - the enquiry form is the
-  // only thing that actually reaches the team - so the callback button hands
-  // the visitor over to it, carrying across whatever has been worked out so
-  // far. Anything that could not be resolved into a valid form value is simply
-  // left out, and that field arrives empty.
   // The most recent itinerary, if one has been produced. Its destination field
   // names a real place, which the collected slots often do not.
   const latestItinerary = [...messages]
     .reverse()
     .find((message) => message.itinerary)?.itinerary;
 
+  // Sarathi cannot take a booking or arrange a call - the enquiry form is the
+  // only thing that actually reaches the team - so the callback button hands
+  // the visitor over to it, carrying across whatever has been worked out so
+  // far. Anything that could not be resolved into a valid form value is simply
+  // left out, and that field arrives empty.
   const prefillQuery = collected
     ? buildChatPrefillQuery(collected, latestItinerary)
     : "";
   const callbackHref = prefillQuery ? `/contact?${prefillQuery}` : "/contact";
-
-  // The widget is mounted in the root layout, so it would otherwise float over
-  // the admin dashboard too. Sarathi is for visitors planning a trip; on an
-  // admin screen it is only clutter.
-  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <>
