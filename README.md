@@ -197,6 +197,7 @@ npm run check:admin-route        # is the admin lock real? (needs the dev server
 npm run check:enquiries-api      # enquiries API
 npm run check:destinations-api   # destinations CRUD
 npm run check:analytics-api      # analytics, and chart/table agreement
+npm run check:self-signup        # can a stranger self-register into the admin API?
 ```
 
 The `check:*` scripts need the dev server running. They mint a real Firebase ID token from the service account, so they exercise the genuine auth path without anyone typing a password. Each cleans up whatever it creates.
@@ -215,12 +216,15 @@ Copy `.env.example` to `.env.local` and fill in the values.
 | `FIREBASE_PROJECT_ID` | Yes | No | Service account `project_id` |
 | `FIREBASE_CLIENT_EMAIL` | Yes | No | Service account `client_email` |
 | `FIREBASE_PRIVATE_KEY` | Yes | No | Service account `private_key` |
+| `ADMIN_EMAILS` | Yes | No | Comma-separated emails allowed into the dashboard |
 
 ### Why three of them are public on purpose
 
 The `NEXT_PUBLIC_FIREBASE_*` values are **meant** to reach the browser. The Firebase client SDK is designed to run in untrusted browsers, and these identify the project rather than authorise anything; protection comes from Firebase Auth rules plus our own server-side token verification. That is exactly why they carry the prefix and the other five do not.
 
-`GROQ_API_KEY` and the three `FIREBASE_*` service-account values are **server-only**. They are read inside route handlers, which never run in the browser. Confirmed against a production build: no chunk under `.next/static` contains the Groq key, the private key, the service account email, the connection string, the model id, or the system prompt.
+**But a public key is not a licence to be an admin.** With Email/Password enabled, that public key is on its own enough to create an account through Google's REST API, with no credentials at all. So `requireAdmin` does not treat "signed in" as "authorised" — it checks the verified email against `ADMIN_EMAILS`. See [Admin authentication](#admin-authentication).
+
+`GROQ_API_KEY`, `ADMIN_EMAILS` and the three `FIREBASE_*` service-account values are **server-only**. They are read inside route handlers, which never run in the browser. Confirmed against a production build: no chunk under `.next/static` contains the Groq key, the private key, the service account email, the connection string, the model id, or the system prompt.
 
 ### `FIREBASE_PRIVATE_KEY` — the one that catches people
 
@@ -279,6 +283,14 @@ Two implementation notes:
 
 - **A helper, not `middleware.js`.** Next middleware runs on the Edge runtime, which lacks the Node crypto the Admin SDK needs to check a signature — verification cannot happen there at all. Per-route also means a route is only reachable if it has explicitly opted in, rather than relying on one gate nobody forgets to configure.
 - **Tokens are verified with `checkRevoked`.** That costs a call to Google per request and buys immediate lockout; without it a token stays valid for up to an hour after an account is disabled.
+
+**A verified token is identity, not authorisation.** This is the subtlest part of the design and it was originally wrong. `requireAdmin` used to accept any account in the Firebase project, on the reasoning that the project existed only for this dashboard. A public API key makes that false: anyone can read the key out of the page source and register an account through Google's REST API. Tested against this project, a self-made account was accepted by every admin route and read real customer records.
+
+So the verified email is now checked against `ADMIN_EMAILS`, and the check **fails closed** — if that variable is unset, nobody is an admin rather than everybody. An authenticated but unlisted account gets `403 not_an_admin`, distinct from the `401` an unauthenticated one gets.
+
+`npm run check:self-signup` reproduces the original attack: it creates an account using only the public key, tries every admin route with it, deletes the account, and fails if any route answered. Worth re-running after any change to auth.
+
+Belt and braces: also turn off self-registration in **Firebase Console → Authentication → Settings → User actions → Enable create (sign-up)**. The allowlist is the guarantee, since it lives in version control; that setting is a second door closed.
 
 **No password is ever stored or seen by this application.** The client SDK sends credentials straight to Google and returns an ID token. Wrong email and wrong password give the same message, so the form never reveals which accounts exist.
 
@@ -430,7 +442,7 @@ To deploy your own copy:
 
 1. Push the repository to GitHub.
 2. In Vercel, **Add New → Project → Import Git Repository**.
-3. Add **all eight** environment variables under Settings → Environment Variables before the first deploy. Paste `FIREBASE_PRIVATE_KEY` without surrounding quotes.
+3. Add **all nine** environment variables under Settings → Environment Variables before the first deploy. Paste `FIREBASE_PRIVATE_KEY` without surrounding quotes. Note that `NEXT_PUBLIC_*` values are compiled in at build time, so adding them later needs a redeploy — with the build cache disabled, or the old bundle is reused.
 4. In MongoDB Atlas, allow access from `0.0.0.0/0` under Network Access.
 5. In Firebase, add your Vercel domain under Authentication → Settings → Authorized domains, or sign-in will be rejected in production.
 6. Deploy. Next.js is detected automatically; no build configuration is needed.
@@ -439,7 +451,7 @@ To deploy your own copy:
 
 Where the brief left room for interpretation, these decisions were made and are documented here rather than hidden.
 
-**Any authenticated Firebase user is an admin.** The Firebase project exists solely for this dashboard and contains one account, so there is no second class of user to distinguish. If the site ever had public Firebase accounts this would be wrong, and a custom-claim check belongs in `lib/requireAdmin.js` — the comment there says so.
+**Admins are an explicit allowlist, not "anyone signed in".** The first version accepted any account in the Firebase project. That was a real vulnerability rather than a simplification: the Web API key is public by design, so a stranger could self-register and reach the admin API — confirmed by test, including reading customer records. `ADMIN_EMAILS` now gates it and fails closed when unset. A custom claim would work equally well and would scale better to several admins; an allowlist is simpler to audit for one.
 
 **Destinations moved from a static file into MongoDB.** Phase 1 kept them in `data/destinations.js`, which CRUD cannot work against. That file is now the seed and the fallback. The knock-on was `validateEnquiry`, which built its destination whitelist by importing that file at module load — impossible once the list lives in the database, because the module is also imported by the browser-side form. The caller now supplies the list, so the validator stays synchronous and dependency-free.
 

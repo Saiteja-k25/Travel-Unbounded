@@ -14,7 +14,8 @@
     "check:admin-route": "node scripts/checkAdminRoute.mjs",
     "check:enquiries-api": "node scripts/checkEnquiriesApi.mjs",
     "check:destinations-api": "node scripts/checkDestinationsApi.mjs",
-    "check:analytics-api": "node scripts/checkAnalyticsApi.mjs"
+    "check:analytics-api": "node scripts/checkAnalyticsApi.mjs",
+    "check:self-signup": "node scripts/checkSelfSignup.mjs"
   },
   "dependencies": {
     "firebase": "^12.18.0",
