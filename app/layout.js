@@ -1,6 +1,7 @@
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ChatWidget from "@/components/ChatWidget";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -21,7 +22,8 @@ export const metadata = {
     "Travel Unbounded designs personally-vetted journeys across India and the world, blending comfort, culture and raw nature.",
 };
 
-// Navbar and Footer live here so every page gets them automatically.
+// Navbar, Footer and the floating chat widget live here so every page gets
+// them automatically.
 export default function RootLayout({ children }) {
   return (
     <html
@@ -32,6 +34,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         {children}
         <Footer />
+        <ChatWidget />
       </body>
     </html>
   );
