@@ -13,7 +13,8 @@
     "check:firebase-admin": "node scripts/checkFirebaseAdmin.mjs",
     "check:admin-route": "node scripts/checkAdminRoute.mjs",
     "check:enquiries-api": "node scripts/checkEnquiriesApi.mjs",
-    "check:destinations-api": "node scripts/checkDestinationsApi.mjs"
+    "check:destinations-api": "node scripts/checkDestinationsApi.mjs",
+    "check:analytics-api": "node scripts/checkAnalyticsApi.mjs"
   },
   "dependencies": {
     "firebase": "^12.18.0",
@@ -24,7 +25,8 @@
     "next": "16.3.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "react-icons": "^5.7.0"
+    "react-icons": "^5.7.0",
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

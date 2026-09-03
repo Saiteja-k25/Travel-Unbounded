@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BarChart3, Inbox, Map } from "lucide-react";
 import AdminEnquiries from "@/components/AdminEnquiries";
 import AdminDestinations from "@/components/AdminDestinations";
+import AdminAnalytics from "@/components/AdminAnalytics";
 
 // Tabs for the dashboard.
 //
@@ -52,19 +53,7 @@ export default function AdminDashboard() {
       <div className="mt-10">
         {active === "enquiries" && <AdminEnquiries />}
         {active === "destinations" && <AdminDestinations />}
-        {active === "analytics" && (
-          <section>
-            <h2 className="font-serif text-2xl text-bone sm:text-3xl">Analytics</h2>
-            <p className="mt-2 text-sm text-forest-300">
-              Enquiries over time and by status.
-            </p>
-            <div className="mt-6 rounded-2xl border border-dashed border-forest-700 bg-forest-800/20 p-10 text-center">
-              <p className="text-xs uppercase tracking-widest text-clay-300">
-                Coming next
-              </p>
-            </div>
-          </section>
-        )}
+        {active === "analytics" && <AdminAnalytics />}
       </div>
     </div>
   );
