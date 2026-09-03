@@ -182,11 +182,20 @@ console.log("\n=== 4. the timeline has no gaps ===");
     if (Math.round((current - previous) / 86400000) !== 1) consecutive = false;
   }
   report("every day is present and in order", consecutive);
+  // Compared against today in Asia/Kolkata, the zone the route buckets by -
+  // NOT the machine running this script. Using the local date made this test
+  // pass on an IST developer machine while the deployed chart was wrong.
+  const todayInZone = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+
   report(
-    "last bucket is today",
-    timeline.at(-1)?.date ===
-      new Date().toLocaleDateString("en-CA"),
-    `${timeline.at(-1)?.date}`
+    "last bucket is today in Asia/Kolkata",
+    timeline.at(-1)?.date === todayInZone,
+    `${timeline.at(-1)?.date} (expected ${todayInZone})`
   );
 }
 

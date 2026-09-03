@@ -21,19 +21,45 @@ import { ENQUIRY_STATUSES } from "@/lib/validateEnquiry";
 const DEFAULT_DAYS = 30;
 const MAX_DAYS = 365;
 
+// Every date in this file is a calendar day in ONE timezone.
+//
+// This matters more than it looks. The aggregation groups by day using
+// $dateToString with a timezone, while the list of buckets is built in
+// JavaScript - and if those two disagree, counts fall into a bucket that does
+// not exist and silently vanish from the chart.
+//
+// That is exactly what happened: the buckets used to be built from the
+// server's local date, which is IST on a developer machine but UTC on Vercel.
+// The tests passed locally and the deployed chart under-reported, dropping an
+// enquiry created late evening IST into a day the bucket list did not have yet.
+//
+// India has no daylight saving, so the offset is a constant +05:30.
+const TIMEZONE = "Asia/Kolkata";
+const TIMEZONE_OFFSET = "+05:30";
+
+// A Date to "YYYY-MM-DD" as it reads in TIMEZONE, not where the server is.
+// en-CA formats as YYYY-MM-DD, which is what $dateToString produces.
+const isoDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: TIMEZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function toIsoDateInZone(date) {
+  return isoDateFormatter.format(date);
+}
+
+// The instant at which a given calendar day starts in TIMEZONE.
+function startOfDayInZone(isoDate) {
+  return new Date(`${isoDate}T00:00:00${TIMEZONE_OFFSET}`);
+}
+
 function parseDays(raw) {
   if (!raw || !/^\d+$/.test(raw)) return DEFAULT_DAYS;
   const parsed = Number.parseInt(raw, 10);
   if (parsed < 1) return DEFAULT_DAYS;
   return Math.min(parsed, MAX_DAYS);
-}
-
-// Local YYYY-MM-DD for a Date, matching how the aggregation buckets days.
-function toIsoDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
 }
 
 export async function GET(request) {
@@ -43,10 +69,13 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const days = parseDays(searchParams.get("days"));
 
-  // Start of the day, `days - 1` days ago, so a range of 1 means today only.
-  const since = new Date();
-  since.setHours(0, 0, 0, 0);
-  since.setDate(since.getDate() - (days - 1));
+  // Start of the day, `days - 1` days ago, so a range of 1 means today only -
+  // all reckoned in TIMEZONE, so the window lines up exactly with the buckets
+  // the aggregation produces.
+  const todayInZone = toIsoDateInZone(new Date());
+  const startDay = startOfDayInZone(todayInZone);
+  startDay.setUTCDate(startDay.getUTCDate() - (days - 1));
+  const since = startDay;
 
   try {
     await connectToDatabase();
@@ -68,7 +97,7 @@ export async function GET(request) {
                 $dateToString: {
                   format: "%Y-%m-%d",
                   date: "$createdAt",
-                  timezone: "Asia/Kolkata",
+                  timezone: TIMEZONE,
                 },
               },
               count: { $sum: 1 },
@@ -115,10 +144,23 @@ export async function GET(request) {
     const countsByDay = new Map(perDay.map((row) => [row._id, row.count]));
     const timeline = [];
     for (let offset = 0; offset < days; offset += 1) {
+      // Stepping in UTC from an instant that is midnight IST keeps every step
+      // on a day boundary, because the offset never changes.
       const date = new Date(since);
-      date.setDate(date.getDate() + offset);
-      const key = toIsoDate(date);
+      date.setUTCDate(date.getUTCDate() + offset);
+      const key = toIsoDateInZone(date);
       timeline.push({ date: key, count: countsByDay.get(key) ?? 0 });
+    }
+
+    // If these disagree, a day produced by the aggregation is missing from the
+    // buckets and its count has been dropped. Logged rather than thrown: a
+    // chart that is slightly wrong is better than a dashboard that errors, but
+    // it must not pass unnoticed.
+    const bucketed = timeline.reduce((sum, row) => sum + row.count, 0);
+    if (bucketed !== enquiriesInRange) {
+      console.error(
+        `Analytics timeline dropped rows: buckets total ${bucketed} but ${enquiriesInRange} enquiries are in range. Check the timezone used for bucketing.`
+      );
     }
 
     const converted = statusCounts.Converted ?? 0;
