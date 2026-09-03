@@ -8,9 +8,14 @@
     "start": "next start",
     "lint": "eslint",
     "seed:destinations": "node scripts/seedDestinations.mjs",
-    "backfill:status": "node scripts/backfillEnquiryStatus.mjs"
+    "backfill:status": "node scripts/backfillEnquiryStatus.mjs",
+    "check:firebase-key": "node scripts/checkFirebaseKey.mjs",
+    "check:firebase-admin": "node scripts/checkFirebaseAdmin.mjs",
+    "check:admin-route": "node scripts/checkAdminRoute.mjs"
   },
   "dependencies": {
+    "firebase": "^12.18.0",
+    "firebase-admin": "^14.3.0",
     "groq-sdk": "^1.6.0",
     "lucide-react": "^1.34.0",
     "mongoose": "^9.9.3",

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   AlertCircle,
   MessageCircle,
@@ -51,6 +52,7 @@ const SUGGESTIONS = [
 ];
 
 export default function ChatWidget() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([GREETING]);
   const [input, setInput] = useState("");
@@ -191,6 +193,11 @@ export default function ChatWidget() {
     ? buildChatPrefillQuery(collected, latestItinerary)
     : "";
   const callbackHref = prefillQuery ? `/contact?${prefillQuery}` : "/contact";
+
+  // The widget is mounted in the root layout, so it would otherwise float over
+  // the admin dashboard too. Sarathi is for visitors planning a trip; on an
+  // admin screen it is only clutter.
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <>

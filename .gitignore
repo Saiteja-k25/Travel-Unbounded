@@ -34,6 +34,15 @@ yarn-error.log*
 .env*
 !.env.example
 
+# Firebase service account keys. These are downloaded as a .json file and
+# contain a private key that grants full admin access to the project, so a
+# stray copy left in the repo would be a serious leak. The values belong in
+# .env.local, never in a committed file.
+*serviceaccount*.json
+*service-account*.json
+firebase-adminsdk*.json
+*-firebase-adminsdk-*.json
+
 # vercel
 .vercel
 
