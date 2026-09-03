@@ -11,7 +11,8 @@
     "backfill:status": "node scripts/backfillEnquiryStatus.mjs",
     "check:firebase-key": "node scripts/checkFirebaseKey.mjs",
     "check:firebase-admin": "node scripts/checkFirebaseAdmin.mjs",
-    "check:admin-route": "node scripts/checkAdminRoute.mjs"
+    "check:admin-route": "node scripts/checkAdminRoute.mjs",
+    "check:enquiries-api": "node scripts/checkEnquiriesApi.mjs"
   },
   "dependencies": {
     "firebase": "^12.18.0",
