@@ -48,7 +48,7 @@ Server-side validation is deliberately independent of the browser throughout: ev
 | Database | MongoDB Atlas | — |
 | ODM | Mongoose | 9.9.3 |
 | AI | Groq (`groq-sdk`) | 1.6.0 |
-| Auth | Firebase Authentication (client + Admin SDK) | 12.18.0 / 14.3.0 |
+| Auth | Firebase Authentication (client + Admin SDK) | 12.18.0 / 13.10.0 |
 | Charts | Recharts | 3.10.1 |
 | Icons | lucide-react | 1.34.0 |
 | Brand icons | react-icons | 5.7.0 |
@@ -281,6 +281,8 @@ Two implementation notes:
 - **Tokens are verified with `checkRevoked`.** That costs a call to Google per request and buys immediate lockout; without it a token stays valid for up to an hour after an account is disabled.
 
 **No password is ever stored or seen by this application.** The client SDK sends credentials straight to Google and returns an ID token. Wrong email and wrong password give the same message, so the form never reveals which accounts exist.
+
+**`firebase-admin` is pinned to 13.x on purpose.** Version 14 pulls `jwks-rsa@4`, which is CommonJS but depends on the ESM-only `jose@6`. Node 22 tolerates `require()` of an ES module, so it loads locally; Vercel runs Node 24 and loads the package through its external-module wrapper, where it does not — every route importing `lib/requireAdmin.js` returned an empty `500` in production while passing locally, including in a local production build. `firebase-admin@13.10` pulls `jwks-rsa@3` → `jose@4`, which is CommonJS, so the conflict is gone rather than worked around. Do not upgrade to 14 without re-checking this on a real deployment.
 
 ## API
 
